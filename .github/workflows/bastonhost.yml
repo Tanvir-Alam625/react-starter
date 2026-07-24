@@ -29,5 +29,8 @@ jobs:
 
       - name: Run tests
         run: npm test
+
+      - name: Run Test UI
+        run: npm run test:ui -y
       - name: Build project
         run: npm run build
