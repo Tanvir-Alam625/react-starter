@@ -1,0 +1,36 @@
+name: Baston Host
+
+on:
+  push:
+    branches:
+      - main
+    pull_request:
+      branches:
+        - main
+      types:
+        - opened
+        - synchronize
+        - reopened
+        - closed
+jobs:
+  ProjectTest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+      - name: Build project
+        run: npm run build
+
+      - name: Start Project
+        run: npm run preview

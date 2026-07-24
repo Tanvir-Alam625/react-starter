@@ -12,7 +12,11 @@ describe('Card Components', () => {
     })
 
     it('applies custom className', () => {
-      render(<Card className="custom-class" data-testid="card">Content</Card>)
+      render(
+        <Card className="custom-class" data-testid="card">
+          Content
+        </Card>
+      )
       const card = screen.getByTestId('card')
       expect(card).toHaveClass('custom-class')
     })
@@ -37,7 +41,11 @@ describe('Card Components', () => {
     })
 
     it('applies custom className', () => {
-      render(<CardHeader className="custom-header" data-testid="header">Content</CardHeader>)
+      render(
+        <CardHeader className="custom-header" data-testid="header">
+          Content
+        </CardHeader>
+      )
       const header = screen.getByTestId('header')
       expect(header).toHaveClass('custom-header')
     })
@@ -53,7 +61,11 @@ describe('Card Components', () => {
     })
 
     it('applies custom className', () => {
-      render(<CardTitle className="custom-title" data-testid="title">Title</CardTitle>)
+      render(
+        <CardTitle className="custom-title" data-testid="title">
+          Title
+        </CardTitle>
+      )
       const title = screen.getByTestId('title')
       expect(title).toHaveClass('custom-title')
     })
@@ -68,7 +80,11 @@ describe('Card Components', () => {
     })
 
     it('applies custom className', () => {
-      render(<CardContent className="custom-content" data-testid="content">Content</CardContent>)
+      render(
+        <CardContent className="custom-content" data-testid="content">
+          Content
+        </CardContent>
+      )
       const content = screen.getByTestId('content')
       expect(content).toHaveClass('custom-content')
     })
@@ -83,7 +99,11 @@ describe('Card Components', () => {
     })
 
     it('applies custom className', () => {
-      render(<CardFooter className="custom-footer" data-testid="footer">Content</CardFooter>)
+      render(
+        <CardFooter className="custom-footer" data-testid="footer">
+          Content
+        </CardFooter>
+      )
       const footer = screen.getByTestId('footer')
       expect(footer).toHaveClass('custom-footer')
     })

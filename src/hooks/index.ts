@@ -48,7 +48,7 @@ export function useDebounce<T>(value: T, delay: number) {
 export function useToggle(defaultValue?: boolean) {
   const [value, setValue] = useState(!!defaultValue)
 
-  const toggle = () => setValue(x => !x)
+  const toggle = () => setValue((x) => !x)
   const setTrue = () => setValue(true)
   const setFalse = () => setValue(false)
 

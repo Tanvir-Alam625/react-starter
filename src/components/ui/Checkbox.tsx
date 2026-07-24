@@ -20,11 +20,10 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               type="checkbox"
               id={inputId}
               ref={ref}
-              className={cn(
-                'sr-only peer',
-                className
-              )}
-              aria-describedby={error ? `${inputId}-error` : description ? `${inputId}-desc` : undefined}
+              className={cn('sr-only peer', className)}
+              aria-describedby={
+                error ? `${inputId}-error` : description ? `${inputId}-desc` : undefined
+              }
               {...props}
             />
             <div className="flex h-4 w-4 items-center justify-center rounded border border-input bg-background text-background shadow focus-ring peer-checked:bg-primary peer-checked:text-primary-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-50">

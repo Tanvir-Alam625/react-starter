@@ -16,7 +16,7 @@ describe('Dropdown Components', () => {
           </DropdownContent>
         </Dropdown>
       )
-      
+
       expect(screen.getByRole('button', { name: 'Trigger' })).toBeInTheDocument()
     })
 
@@ -32,10 +32,10 @@ describe('Dropdown Components', () => {
           </DropdownContent>
         </Dropdown>
       )
-      
+
       const trigger = screen.getByRole('button', { name: 'Open Menu' })
       await user.click(trigger)
-      
+
       expect(screen.getByText('Menu Item')).toBeInTheDocument()
     })
 
@@ -54,15 +54,15 @@ describe('Dropdown Components', () => {
           <div data-testid="outside">Outside element</div>
         </div>
       )
-      
+
       const trigger = screen.getByRole('button', { name: 'Trigger' })
       await user.click(trigger)
-      
+
       expect(screen.getByText('Item')).toBeInTheDocument()
-      
+
       const outside = screen.getByTestId('outside')
       await user.click(outside)
-      
+
       expect(screen.queryByText('Item')).not.toBeInTheDocument()
     })
 
@@ -78,21 +78,21 @@ describe('Dropdown Components', () => {
           </DropdownContent>
         </Dropdown>
       )
-      
+
       const trigger = screen.getByRole('button', { name: 'Trigger' })
       await user.click(trigger)
-      
+
       expect(screen.getByText('Item')).toBeInTheDocument()
-      
+
       fireEvent.keyDown(document, { key: 'Escape' })
-      
+
       expect(screen.queryByText('Item')).not.toBeInTheDocument()
     })
 
     it('supports controlled state', async () => {
       const user = userEvent.setup()
       const onOpenChange = vi.fn()
-      
+
       const { rerender } = render(
         <Dropdown open={false} onOpenChange={onOpenChange}>
           <DropdownTrigger>
@@ -103,14 +103,14 @@ describe('Dropdown Components', () => {
           </DropdownContent>
         </Dropdown>
       )
-      
+
       expect(screen.queryByText('Controlled Item')).not.toBeInTheDocument()
-      
+
       const trigger = screen.getByRole('button', { name: 'Controlled Trigger' })
       await user.click(trigger)
-      
+
       expect(onOpenChange).toHaveBeenCalledWith(true)
-      
+
       rerender(
         <Dropdown open={true} onOpenChange={onOpenChange}>
           <DropdownTrigger>
@@ -121,7 +121,7 @@ describe('Dropdown Components', () => {
           </DropdownContent>
         </Dropdown>
       )
-      
+
       expect(screen.getByText('Controlled Item')).toBeInTheDocument()
     })
   })
@@ -138,7 +138,7 @@ describe('Dropdown Components', () => {
           </DropdownContent>
         </Dropdown>
       )
-      
+
       const trigger = screen.getByTestId('trigger')
       expect(trigger).toBeInTheDocument()
       expect(trigger).toHaveTextContent('Custom Trigger')
@@ -155,7 +155,7 @@ describe('Dropdown Components', () => {
           </DropdownContent>
         </Dropdown>
       )
-      
+
       const trigger = screen.getByTestId('accessible-trigger')
       expect(trigger).toHaveAttribute('aria-haspopup', 'true')
       expect(trigger).toHaveAttribute('aria-expanded', 'false')
@@ -173,12 +173,12 @@ describe('Dropdown Components', () => {
           </DropdownContent>
         </Dropdown>
       )
-      
+
       const trigger = screen.getByTestId('expandable-trigger')
       expect(trigger).toHaveAttribute('aria-expanded', 'false')
-      
+
       await user.click(trigger)
-      
+
       expect(trigger).toHaveAttribute('aria-expanded', 'true')
     })
   })
@@ -196,10 +196,10 @@ describe('Dropdown Components', () => {
           </DropdownContent>
         </Dropdown>
       )
-      
+
       const trigger = screen.getByRole('button', { name: 'Trigger' })
       await user.click(trigger)
-      
+
       const content = screen.getByTestId('dropdown-content')
       expect(content).toBeInTheDocument()
       expect(screen.getByText('Custom Content')).toBeInTheDocument()
@@ -217,10 +217,10 @@ describe('Dropdown Components', () => {
           </DropdownContent>
         </Dropdown>
       )
-      
+
       const trigger = screen.getByRole('button', { name: 'Trigger' })
       await user.click(trigger)
-      
+
       const content = screen.getByTestId('content')
       expect(content).toHaveClass('custom-content')
     })
@@ -237,10 +237,10 @@ describe('Dropdown Components', () => {
           </DropdownContent>
         </Dropdown>
       )
-      
+
       const trigger = screen.getByRole('button', { name: 'Trigger' })
       await user.click(trigger)
-      
+
       const content = screen.getByTestId('positioned-content')
       expect(content).toBeInTheDocument()
     })
@@ -259,10 +259,10 @@ describe('Dropdown Components', () => {
           </DropdownContent>
         </Dropdown>
       )
-      
+
       const trigger = screen.getByRole('button', { name: 'Trigger' })
       await user.click(trigger)
-      
+
       const item = screen.getByTestId('dropdown-item')
       expect(item).toBeInTheDocument()
       expect(item).toHaveTextContent('Test Item')
@@ -271,7 +271,7 @@ describe('Dropdown Components', () => {
     it('handles click events', async () => {
       const user = userEvent.setup()
       const onClick = vi.fn()
-      
+
       render(
         <Dropdown>
           <DropdownTrigger>
@@ -282,20 +282,20 @@ describe('Dropdown Components', () => {
           </DropdownContent>
         </Dropdown>
       )
-      
+
       const trigger = screen.getByRole('button', { name: 'Trigger' })
       await user.click(trigger)
-      
+
       const item = screen.getByText('Clickable Item')
       await user.click(item)
-      
+
       expect(onClick).toHaveBeenCalled()
     })
 
     it('can be disabled', async () => {
       const user = userEvent.setup()
       const onClick = vi.fn()
-      
+
       render(
         <Dropdown>
           <DropdownTrigger>
@@ -308,13 +308,13 @@ describe('Dropdown Components', () => {
           </DropdownContent>
         </Dropdown>
       )
-      
+
       const trigger = screen.getByRole('button', { name: 'Trigger' })
       await user.click(trigger)
-      
+
       const item = screen.getByTestId('disabled-item')
       expect(item).toHaveAttribute('aria-disabled', 'true')
-      
+
       await user.click(item)
       expect(onClick).not.toHaveBeenCalled()
     })
@@ -333,10 +333,10 @@ describe('Dropdown Components', () => {
           </DropdownContent>
         </Dropdown>
       )
-      
+
       const trigger = screen.getByRole('button', { name: 'Trigger' })
       await user.click(trigger)
-      
+
       const item = screen.getByTestId('item')
       expect(item).toHaveClass('custom-item')
     })
@@ -354,13 +354,13 @@ describe('Dropdown Components', () => {
           </DropdownContent>
         </Dropdown>
       )
-      
+
       const trigger = screen.getByRole('button', { name: 'Trigger' })
       fireEvent.click(trigger)
-      
+
       const item1 = screen.getByTestId('item1')
       fireEvent.keyDown(item1, { key: 'ArrowDown' })
-      
+
       const item2 = screen.getByTestId('item2')
       expect(item2).toHaveFocus()
     })
@@ -371,7 +371,7 @@ describe('Dropdown Components', () => {
       const user = userEvent.setup()
       const onEdit = vi.fn()
       const onDelete = vi.fn()
-      
+
       render(
         <Dropdown>
           <DropdownTrigger>
@@ -390,14 +390,14 @@ describe('Dropdown Components', () => {
           </DropdownContent>
         </Dropdown>
       )
-      
+
       const trigger = screen.getByRole('button', { name: 'Actions' })
       await user.click(trigger)
-      
+
       expect(screen.getByText('Edit')).toBeInTheDocument()
       expect(screen.getByText('Delete')).toBeInTheDocument()
       expect(screen.getByText('Disabled Action')).toBeInTheDocument()
-      
+
       await user.click(screen.getByText('Edit'))
       expect(onEdit).toHaveBeenCalled()
     })
@@ -425,10 +425,10 @@ describe('Dropdown Components', () => {
           </DropdownContent>
         </Dropdown>
       )
-      
+
       const trigger = screen.getByRole('button', { name: 'Menu' })
       await user.click(trigger)
-      
+
       expect(screen.getByText('Title')).toBeInTheDocument()
       expect(screen.getByText('Description')).toBeInTheDocument()
       expect(screen.getByText('Nested Item 1')).toBeInTheDocument()
@@ -450,15 +450,15 @@ describe('Dropdown Components', () => {
           </DropdownContent>
         </Dropdown>
       )
-      
+
       const trigger = screen.getByRole('button', { name: 'Accessible Menu' })
       expect(trigger).toHaveAttribute('aria-haspopup', 'true')
-      
+
       await user.click(trigger)
-      
+
       const menu = screen.getByRole('menu')
       expect(menu).toBeInTheDocument()
-      
+
       const menuItems = screen.getAllByRole('menuitem')
       expect(menuItems).toHaveLength(2)
     })
@@ -476,10 +476,10 @@ describe('Dropdown Components', () => {
           </DropdownContent>
         </Dropdown>
       )
-      
+
       const trigger = screen.getByRole('button', { name: 'Focus Test' })
       await user.click(trigger)
-      
+
       const firstItem = screen.getByTestId('first-item')
       expect(firstItem).toHaveFocus()
     })

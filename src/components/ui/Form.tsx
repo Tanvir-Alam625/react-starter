@@ -1,87 +1,94 @@
-import { type ReactNode } from 'react'
-import { useFormContext, type FieldPath, type FieldValues } from 'react-hook-form'
+import { type ReactNode, type HTMLAttributes } from 'react'
 import { cn } from '@/lib/utils'
 
-export interface FormFieldProps<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
-> {
+export interface FormFieldProps<TFieldValues = unknown, TName extends string = string>
+  extends HTMLAttributes<HTMLDivElement> {
   name: TName
   children: ReactNode
   className?: string
 }
 
-export interface FormItemProps {
+export interface FormItemProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode
   className?: string
 }
 
-export interface FormLabelProps {
+export interface FormLabelProps extends HTMLAttributes<HTMLLabelElement> {
   children: ReactNode
   className?: string
   required?: boolean
+  disabled?: boolean
 }
 
-export interface FormControlProps {
+export interface FormControlProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode
   className?: string
 }
 
-export interface FormDescriptionProps {
+export interface FormDescriptionProps extends HTMLAttributes<HTMLParagraphElement> {
   children: ReactNode
   className?: string
 }
 
-export interface FormMessageProps {
+export interface FormMessageProps extends HTMLAttributes<HTMLParagraphElement> {
+  type?: 'success' | 'error' | 'warning' | 'loading'
   className?: string
+  children: ReactNode
 }
 
-const FormField = <
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
->({
+const FormField = <TFieldValues = unknown, TName extends string = string>({
   name,
   children,
   className,
+  ...props
 }: FormFieldProps<TFieldValues, TName>) => {
   return (
-    <div className={cn('space-y-2', className)} data-field={name}>
+    <div className={cn('form-field', className)} data-field={name} {...props}>
       {children}
     </div>
   )
 }
 
-const FormItem = ({ children, className }: FormItemProps) => {
-  return <div className={cn('space-y-2', className)}>{children}</div>
+const FormItem = ({ children, className, ...props }: FormItemProps) => {
+  return (
+    <div className={cn('form-item', className)} {...props}>
+      {children}
+    </div>
+  )
 }
 
-const FormLabel = ({ children, className, required }: FormLabelProps) => {
+const FormLabel = ({ children, className, required, disabled, ...props }: FormLabelProps) => {
   return (
-    <label className={cn('form-label', className)}>
+    <label
+      className={cn('form-label', className, required && 'required', disabled && 'disabled')}
+      {...props}
+    >
       {children}
       {required && <span className="ml-1 text-destructive">*</span>}
     </label>
   )
 }
 
-const FormControl = ({ children, className }: FormControlProps) => {
-  return <div className={cn(className)}>{children}</div>
-}
-
-const FormDescription = ({ children, className }: FormDescriptionProps) => {
-  return <p className={cn('form-description', className)}>{children}</p>
-}
-
-const FormMessage = ({ className }: FormMessageProps) => {
-  const { formState } = useFormContext()
-  const fieldName = 'name' // This would be dynamically set in real implementation
-  const error = formState.errors[fieldName]
-
-  if (!error) return null
-
+const FormControl = ({ children, className, ...props }: FormControlProps) => {
   return (
-    <p className={cn('form-error', className)}>
-      {error.message as string}
+    <div className={cn('form-control', className)} {...props}>
+      {children}
+    </div>
+  )
+}
+
+const FormDescription = ({ children, className, ...props }: FormDescriptionProps) => {
+  return (
+    <p className={cn('form-description', className)} {...props}>
+      {children}
+    </p>
+  )
+}
+
+const FormMessage = ({ type = 'error', className, children, ...props }: FormMessageProps) => {
+  return (
+    <p className={cn('form-message', type, className)} {...props}>
+      {children}
     </p>
   )
 }
@@ -104,24 +111,10 @@ const FormStatus = ({ status, message, className }: FormStatusProps) => {
   if (!message) return null
 
   return (
-    <div
-      className={cn(
-        'rounded-md border p-3 text-sm',
-        statusClasses[status],
-        className
-      )}
-    >
+    <div className={cn('rounded-md border p-3 text-sm', statusClasses[status], className)}>
       {message}
     </div>
   )
 }
 
-export {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormDescription,
-  FormMessage,
-  FormStatus,
-}
+export { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage, FormStatus }

@@ -1,14 +1,14 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
-import { 
-  Table, 
-  TableHeader, 
-  TableBody, 
-  TableFooter, 
-  TableHead, 
-  TableRow, 
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableHead,
+  TableRow,
   TableCell,
-  TableCaption 
+  TableCaption,
 } from '@/components/ui/Table'
 
 describe('Table Components', () => {
@@ -23,7 +23,7 @@ describe('Table Components', () => {
           </TableBody>
         </Table>
       )
-      
+
       const table = screen.getByTestId('test-table')
       expect(table).toBeInTheDocument()
       expect(table.tagName).toBe('TABLE')
@@ -39,7 +39,7 @@ describe('Table Components', () => {
           </TableBody>
         </Table>
       )
-      
+
       const table = screen.getByTestId('table')
       expect(table).toHaveClass('custom-table')
     })
@@ -57,7 +57,7 @@ describe('Table Components', () => {
           </TableBody>
         </Table>
       )
-      
+
       const caption = screen.getByText('Table Caption')
       expect(caption).toBeInTheDocument()
       expect(caption.tagName).toBe('CAPTION')
@@ -74,7 +74,7 @@ describe('Table Components', () => {
           </TableBody>
         </Table>
       )
-      
+
       const caption = screen.getByText('Caption')
       expect(caption).toHaveClass('custom-caption')
     })
@@ -91,7 +91,7 @@ describe('Table Components', () => {
           </TableHeader>
         </Table>
       )
-      
+
       const header = screen.getByTestId('table-header')
       expect(header).toBeInTheDocument()
       expect(header.tagName).toBe('THEAD')
@@ -107,7 +107,7 @@ describe('Table Components', () => {
           </TableHeader>
         </Table>
       )
-      
+
       const header = screen.getByTestId('header')
       expect(header).toHaveClass('custom-header')
     })
@@ -124,7 +124,7 @@ describe('Table Components', () => {
           </TableBody>
         </Table>
       )
-      
+
       const body = screen.getByTestId('table-body')
       expect(body).toBeInTheDocument()
       expect(body.tagName).toBe('TBODY')
@@ -140,7 +140,7 @@ describe('Table Components', () => {
           </TableBody>
         </Table>
       )
-      
+
       const body = screen.getByTestId('body')
       expect(body).toHaveClass('custom-body')
     })
@@ -162,7 +162,7 @@ describe('Table Components', () => {
           </TableFooter>
         </Table>
       )
-      
+
       const footer = screen.getByTestId('table-footer')
       expect(footer).toBeInTheDocument()
       expect(footer.tagName).toBe('TFOOT')
@@ -183,7 +183,7 @@ describe('Table Components', () => {
           </TableFooter>
         </Table>
       )
-      
+
       const footer = screen.getByTestId('footer')
       expect(footer).toHaveClass('custom-footer')
     })
@@ -200,7 +200,7 @@ describe('Table Components', () => {
           </TableBody>
         </Table>
       )
-      
+
       const row = screen.getByTestId('table-row')
       expect(row).toBeInTheDocument()
       expect(row.tagName).toBe('TR')
@@ -216,7 +216,7 @@ describe('Table Components', () => {
           </TableBody>
         </Table>
       )
-      
+
       const row = screen.getByTestId('row')
       expect(row).toHaveClass('custom-row')
     })
@@ -233,7 +233,7 @@ describe('Table Components', () => {
           </TableHeader>
         </Table>
       )
-      
+
       const head = screen.getByTestId('table-head')
       expect(head).toBeInTheDocument()
       expect(head.tagName).toBe('TH')
@@ -244,12 +244,14 @@ describe('Table Components', () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="custom-head" data-testid="head">Header</TableHead>
+              <TableHead className="custom-head" data-testid="head">
+                Header
+              </TableHead>
             </TableRow>
           </TableHeader>
         </Table>
       )
-      
+
       const head = screen.getByTestId('head')
       expect(head).toHaveClass('custom-head')
     })
@@ -259,12 +261,14 @@ describe('Table Components', () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead scope="col" data-testid="scoped-head">Column Header</TableHead>
+              <TableHead scope="col" data-testid="scoped-head">
+                Column Header
+              </TableHead>
             </TableRow>
           </TableHeader>
         </Table>
       )
-      
+
       const head = screen.getByTestId('scoped-head')
       expect(head).toHaveAttribute('scope', 'col')
     })
@@ -281,7 +285,7 @@ describe('Table Components', () => {
           </TableBody>
         </Table>
       )
-      
+
       const cell = screen.getByTestId('table-cell')
       expect(cell).toBeInTheDocument()
       expect(cell.tagName).toBe('TD')
@@ -292,12 +296,14 @@ describe('Table Components', () => {
         <Table>
           <TableBody>
             <TableRow>
-              <TableCell className="custom-cell" data-testid="cell">Content</TableCell>
+              <TableCell className="custom-cell" data-testid="cell">
+                Content
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
       )
-      
+
       const cell = screen.getByTestId('cell')
       expect(cell).toHaveClass('custom-cell')
     })
@@ -314,7 +320,7 @@ describe('Table Components', () => {
           </TableBody>
         </Table>
       )
-      
+
       const cell = screen.getByTestId('spanned-cell')
       expect(cell).toHaveAttribute('colspan', '2')
       expect(cell).toHaveAttribute('rowspan', '1')
@@ -352,7 +358,7 @@ describe('Table Components', () => {
           </TableFooter>
         </Table>
       )
-      
+
       expect(screen.getByText('Employee Information')).toBeInTheDocument()
       expect(screen.getByText('Name')).toBeInTheDocument()
       expect(screen.getByText('Role')).toBeInTheDocument()
@@ -388,7 +394,7 @@ describe('Table Components', () => {
           </TableBody>
         </Table>
       )
-      
+
       expect(screen.getByText('Complex Content')).toBeInTheDocument()
       expect(screen.getByText('Description')).toBeInTheDocument()
       expect(screen.getByRole('button', { name: 'Action' })).toBeInTheDocument()
@@ -415,11 +421,11 @@ describe('Table Components', () => {
           </TableBody>
         </Table>
       )
-      
+
       const columnHeaders = screen.getAllByRole('columnheader')
       const rowHeader = screen.getByRole('rowheader')
       const dataCell = screen.getByRole('cell')
-      
+
       expect(columnHeaders).toHaveLength(2)
       expect(rowHeader).toBeInTheDocument()
       expect(dataCell).toBeInTheDocument()
@@ -435,7 +441,7 @@ describe('Table Components', () => {
           </TableBody>
         </Table>
       )
-      
+
       const table = screen.getByRole('table')
       expect(table).toHaveAttribute('aria-label', 'Data table')
       expect(table).toHaveAttribute('aria-describedby', 'table-description')

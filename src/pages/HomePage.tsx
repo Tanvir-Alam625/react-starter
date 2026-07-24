@@ -7,7 +7,14 @@ import { RadioGroup } from '@/components/ui/Radio'
 import { Select, type SelectOption } from '@/components/ui/Select'
 import { Modal, ModalHeader, ModalTitle, ModalBody, ModalFooter } from '@/components/ui/Modal'
 import { Dropdown, DropdownTrigger } from '@/components/ui/Dropdown'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/Table'
 import { DataTable } from '@/components/ui/DataTable'
 import { FormStatus } from '@/components/ui/Form'
 import { useTheme } from '@/components/ThemeProvider'
@@ -32,22 +39,24 @@ const sampleData: SampleData[] = [
 const columns: ColumnDef<SampleData>[] = [
   { accessorKey: 'name', header: 'Name' },
   { accessorKey: 'email', header: 'Email' },
-  { 
-    accessorKey: 'status', 
+  {
+    accessorKey: 'status',
     header: 'Status',
     cell: ({ getValue }) => {
       const status = getValue() as string
       const statusClasses = {
         active: 'status-success',
-        inactive: 'status-error', 
-        pending: 'status-warning'
+        inactive: 'status-error',
+        pending: 'status-warning',
       }
       return (
-        <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusClasses[status as keyof typeof statusClasses]}`}>
+        <span
+          className={`px-2 py-1 rounded-full text-xs font-medium ${statusClasses[status as keyof typeof statusClasses]}`}
+        >
           {status}
         </span>
       )
-    }
+    },
   },
   { accessorKey: 'role', header: 'Role' },
 ]
@@ -75,10 +84,10 @@ export const HomePage = () => {
   const handleSubmit = async () => {
     setIsLoading(true)
     setFormStatus(null)
-    
+
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+
     setIsLoading(false)
     setFormStatus('success')
     setTimeout(() => setFormStatus(null), 3000)
@@ -105,14 +114,14 @@ export const HomePage = () => {
           Enhanced React Starter
         </h1>
         <p className="mt-6 text-lg leading-8 text-muted-foreground max-w-3xl mx-auto">
-          A comprehensive React boilerplate with TypeScript, Tailwind CSS, enhanced UI components, 
+          A comprehensive React boilerplate with TypeScript, Tailwind CSS, enhanced UI components,
           accessibility features, testing setup, and professional development tools.
         </p>
         <div className="mt-10 flex items-center justify-center gap-x-6">
           <Button size="lg" onClick={() => setIsModalOpen(true)}>
             Open Modal Demo
           </Button>
-          <Dropdown 
+          <Dropdown
             trigger={
               <Button variant="outline" size="lg">
                 Theme: {theme} <ChevronDown className="ml-2 h-4 w-4" />
@@ -125,14 +134,14 @@ export const HomePage = () => {
 
       {/* Form Status Demo */}
       {formStatus && (
-        <FormStatus 
-          status={formStatus} 
+        <FormStatus
+          status={formStatus}
           message={
-            formStatus === 'success' 
-              ? 'Form submitted successfully!' 
+            formStatus === 'success'
+              ? 'Form submitted successfully!'
               : formStatus === 'error'
-              ? 'There was an error submitting the form.'
-              : 'Please check your input.'
+                ? 'There was an error submitting the form.'
+                : 'Please check your input.'
           }
         />
       )}
@@ -149,23 +158,20 @@ export const HomePage = () => {
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-4">
-              <Input 
-                placeholder="Enter your name" 
-                helperText="This field is required"
-              />
-              <Input 
-                type="email" 
-                placeholder="Enter your email" 
+              <Input placeholder="Enter your name" helperText="This field is required" />
+              <Input
+                type="email"
+                placeholder="Enter your email"
                 error="Please enter a valid email address"
               />
-              
-              <Select 
+
+              <Select
                 options={selectOptions}
                 placeholder="Select an option..."
                 helperText="Choose from the available options"
               />
 
-              <Checkbox 
+              <Checkbox
                 label="I agree to the terms and conditions"
                 description="By checking this, you accept our terms"
               />
@@ -181,11 +187,7 @@ export const HomePage = () => {
               </div>
 
               <div className="flex gap-2">
-                <Button 
-                  loading={isLoading}
-                  onClick={handleSubmit}
-                  className="flex-1"
-                >
+                <Button loading={isLoading} onClick={handleSubmit} className="flex-1">
                   {isLoading ? 'Submitting...' : 'Submit Form'}
                 </Button>
                 <Button variant="outline" className="flex-1">
@@ -200,9 +202,7 @@ export const HomePage = () => {
         <Card>
           <CardHeader>
             <CardTitle>Button Components</CardTitle>
-            <CardDescription>
-              Various button styles and states with loading support
-            </CardDescription>
+            <CardDescription>Various button styles and states with loading support</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-3">
@@ -212,7 +212,7 @@ export const HomePage = () => {
                 <Button variant="destructive">Destructive</Button>
                 <Button variant="outline">Outline</Button>
               </div>
-              
+
               <div className="flex gap-2 flex-wrap">
                 <Button variant="ghost">Ghost</Button>
                 <Button variant="link">Link</Button>
@@ -231,7 +231,7 @@ export const HomePage = () => {
 
             <div className="pt-4 border-t">
               <h4 className="font-medium mb-3">Dropdown Example</h4>
-              <Dropdown 
+              <Dropdown
                 trigger={<DropdownTrigger>Account Menu</DropdownTrigger>}
                 items={dropdownItems}
               />
@@ -249,11 +249,7 @@ export const HomePage = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <DataTable 
-            columns={columns}
-            data={sampleData}
-            searchPlaceholder="Search users..."
-          />
+          <DataTable columns={columns} data={sampleData} searchPlaceholder="Search users..." />
         </CardContent>
       </Card>
 
@@ -261,9 +257,7 @@ export const HomePage = () => {
       <Card>
         <CardHeader>
           <CardTitle>Basic Table</CardTitle>
-          <CardDescription>
-            Simple table component for basic data display
-          </CardDescription>
+          <CardDescription>Simple table component for basic data display</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
@@ -277,22 +271,30 @@ export const HomePage = () => {
             <TableBody>
               <TableRow>
                 <TableCell>TypeScript Support</TableCell>
-                <TableCell><span className="status-success px-2 py-1 rounded text-xs">Active</span></TableCell>
+                <TableCell>
+                  <span className="status-success px-2 py-1 rounded text-xs">Active</span>
+                </TableCell>
                 <TableCell>Core</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Tailwind CSS</TableCell>
-                <TableCell><span className="status-success px-2 py-1 rounded text-xs">Active</span></TableCell>
+                <TableCell>
+                  <span className="status-success px-2 py-1 rounded text-xs">Active</span>
+                </TableCell>
                 <TableCell>Styling</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Testing Setup</TableCell>
-                <TableCell><span className="status-success px-2 py-1 rounded text-xs">Active</span></TableCell>
+                <TableCell>
+                  <span className="status-success px-2 py-1 rounded text-xs">Active</span>
+                </TableCell>
                 <TableCell>Development</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Accessibility</TableCell>
-                <TableCell><span className="status-success px-2 py-1 rounded text-xs">Active</span></TableCell>
+                <TableCell>
+                  <span className="status-success px-2 py-1 rounded text-xs">Active</span>
+                </TableCell>
                 <TableCell>Quality</TableCell>
               </TableRow>
             </TableBody>
@@ -301,24 +303,22 @@ export const HomePage = () => {
       </Card>
 
       {/* Modal Demo */}
-      <Modal 
-        open={isModalOpen} 
-        onClose={() => setIsModalOpen(false)}
-        size="lg"
-      >
+      <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)} size="lg">
         <ModalHeader>
           <ModalTitle>Component Demo Modal</ModalTitle>
         </ModalHeader>
         <ModalBody>
           <p className="text-muted-foreground mb-4">
-            This modal demonstrates the enhanced modal component with proper accessibility,
-            keyboard navigation, and backdrop click handling.
+            This modal demonstrates the enhanced modal component with proper accessibility, keyboard
+            navigation, and backdrop click handling.
           </p>
           <div className="space-y-4">
             <Input placeholder="Try typing here..." />
             <Checkbox label="Modal checkbox example" />
             <div className="flex gap-2">
-              <Button variant="outline" size="sm">Small Action</Button>
+              <Button variant="outline" size="sm">
+                Small Action
+              </Button>
               <Button size="sm">Primary Action</Button>
             </div>
           </div>
@@ -327,9 +327,7 @@ export const HomePage = () => {
           <Button variant="outline" onClick={() => setIsModalOpen(false)}>
             Cancel
           </Button>
-          <Button onClick={() => setIsModalOpen(false)}>
-            Confirm
-          </Button>
+          <Button onClick={() => setIsModalOpen(false)}>Confirm</Button>
         </ModalFooter>
       </Modal>
     </div>

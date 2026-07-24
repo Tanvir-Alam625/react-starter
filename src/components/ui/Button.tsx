@@ -2,31 +2,28 @@ import { forwardRef, type ButtonHTMLAttributes } from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
-const buttonVariants = cva(
-  'btn',
-  {
-    variants: {
-      variant: {
-        default: 'btn-primary',
-        destructive: 'btn-destructive',
-        outline: 'btn-outline',
-        secondary: 'btn-secondary',
-        ghost: 'btn-ghost',
-        link: 'btn-link',
-      },
-      size: {
-        default: 'btn-default',
-        sm: 'btn-sm',
-        lg: 'btn-lg',
-        icon: 'btn-icon',
-      },
+const buttonVariants = cva('btn', {
+  variants: {
+    variant: {
+      default: 'btn-primary',
+      destructive: 'btn-destructive',
+      outline: 'btn-outline',
+      secondary: 'btn-secondary',
+      ghost: 'btn-ghost',
+      link: 'btn-link',
     },
-    defaultVariants: {
-      variant: 'default',
-      size: 'default',
+    size: {
+      default: 'btn-default',
+      sm: 'btn-sm',
+      lg: 'btn-lg',
+      icon: 'btn-icon',
     },
-  }
-)
+  },
+  defaultVariants: {
+    variant: 'default',
+    size: 'default',
+  },
+})
 
 export interface ButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,

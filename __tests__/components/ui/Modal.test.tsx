@@ -11,7 +11,7 @@ describe('Modal Components', () => {
           <div data-testid="modal-content">Modal content</div>
         </Modal>
       )
-      
+
       expect(screen.getByTestId('modal-content')).toBeInTheDocument()
       expect(screen.getByRole('dialog')).toBeInTheDocument()
     })
@@ -22,7 +22,7 @@ describe('Modal Components', () => {
           <div data-testid="modal-content">Modal content</div>
         </Modal>
       )
-      
+
       expect(screen.queryByTestId('modal-content')).not.toBeInTheDocument()
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     })
@@ -30,46 +30,46 @@ describe('Modal Components', () => {
     it('calls onClose when backdrop is clicked', async () => {
       const user = userEvent.setup()
       const handleClose = vi.fn()
-      
+
       render(
         <Modal open={true} onClose={handleClose}>
           <div>Modal content</div>
         </Modal>
       )
-      
+
       const backdrop = screen.getByTestId('modal-backdrop')
       await user.click(backdrop)
-      
+
       expect(handleClose).toHaveBeenCalled()
     })
 
     it('calls onClose when escape key is pressed', () => {
       const handleClose = vi.fn()
-      
+
       render(
         <Modal open={true} onClose={handleClose}>
           <div>Modal content</div>
         </Modal>
       )
-      
+
       fireEvent.keyDown(document, { key: 'Escape' })
-      
+
       expect(handleClose).toHaveBeenCalled()
     })
 
     it('does not close when modal content is clicked', async () => {
       const user = userEvent.setup()
       const handleClose = vi.fn()
-      
+
       render(
         <Modal open={true} onClose={handleClose}>
           <div data-testid="modal-content">Modal content</div>
         </Modal>
       )
-      
+
       const content = screen.getByTestId('modal-content')
       await user.click(content)
-      
+
       expect(handleClose).not.toHaveBeenCalled()
     })
 
@@ -82,12 +82,12 @@ describe('Modal Components', () => {
           </div>
         </Modal>
       )
-      
+
       const firstButton = screen.getByTestId('first-button')
       const secondButton = screen.getByTestId('second-button')
-      
+
       expect(document.activeElement).toBe(firstButton)
-      
+
       fireEvent.keyDown(secondButton, { key: 'Tab' })
       expect(document.activeElement).toBe(firstButton)
     })
@@ -97,21 +97,21 @@ describe('Modal Components', () => {
       triggerButton.textContent = 'Open Modal'
       document.body.appendChild(triggerButton)
       triggerButton.focus()
-      
+
       const { rerender } = render(
         <Modal open={true} onClose={vi.fn()}>
           <div>Modal content</div>
         </Modal>
       )
-      
+
       rerender(
         <Modal open={false} onClose={vi.fn()}>
           <div>Modal content</div>
         </Modal>
       )
-      
+
       expect(document.activeElement).toBe(triggerButton)
-      
+
       document.body.removeChild(triggerButton)
     })
 
@@ -121,7 +121,7 @@ describe('Modal Components', () => {
           <div>Modal content</div>
         </Modal>
       )
-      
+
       const modal = screen.getByRole('dialog')
       expect(modal).toHaveClass('custom-modal')
     })
@@ -132,7 +132,7 @@ describe('Modal Components', () => {
           <div>Modal content</div>
         </Modal>
       )
-      
+
       expect(document.body.style.overflow).toBe('hidden')
     })
 
@@ -142,15 +142,15 @@ describe('Modal Components', () => {
           <div>Modal content</div>
         </Modal>
       )
-      
+
       expect(document.body.style.overflow).toBe('hidden')
-      
+
       rerender(
         <Modal open={false} onClose={vi.fn()}>
           <div>Modal content</div>
         </Modal>
       )
-      
+
       expect(document.body.style.overflow).toBe('')
     })
   })
@@ -159,12 +159,10 @@ describe('Modal Components', () => {
     it('renders header correctly', () => {
       render(
         <Modal open={true} onClose={vi.fn()}>
-          <ModalHeader data-testid="modal-header">
-            Header content
-          </ModalHeader>
+          <ModalHeader data-testid="modal-header">Header content</ModalHeader>
         </Modal>
       )
-      
+
       const header = screen.getByTestId('modal-header')
       expect(header).toBeInTheDocument()
       expect(header).toHaveClass('modal-header')
@@ -178,7 +176,7 @@ describe('Modal Components', () => {
           </ModalHeader>
         </Modal>
       )
-      
+
       const header = screen.getByTestId('header')
       expect(header).toHaveClass('custom-header')
     })
@@ -193,7 +191,7 @@ describe('Modal Components', () => {
           </ModalHeader>
         </Modal>
       )
-      
+
       const title = screen.getByText('Modal Title')
       expect(title).toBeInTheDocument()
       expect(title).toHaveClass('modal-title')
@@ -207,7 +205,7 @@ describe('Modal Components', () => {
           </ModalHeader>
         </Modal>
       )
-      
+
       const title = screen.getByText('Title')
       expect(title).toHaveClass('custom-title')
     })
@@ -217,12 +215,10 @@ describe('Modal Components', () => {
     it('renders body correctly', () => {
       render(
         <Modal open={true} onClose={vi.fn()}>
-          <ModalBody data-testid="modal-body">
-            Body content
-          </ModalBody>
+          <ModalBody data-testid="modal-body">Body content</ModalBody>
         </Modal>
       )
-      
+
       const body = screen.getByTestId('modal-body')
       expect(body).toBeInTheDocument()
       expect(body).toHaveClass('modal-body')
@@ -236,7 +232,7 @@ describe('Modal Components', () => {
           </ModalBody>
         </Modal>
       )
-      
+
       const body = screen.getByTestId('body')
       expect(body).toHaveClass('custom-body')
     })
@@ -246,12 +242,10 @@ describe('Modal Components', () => {
     it('renders footer correctly', () => {
       render(
         <Modal open={true} onClose={vi.fn()}>
-          <ModalFooter data-testid="modal-footer">
-            Footer content
-          </ModalFooter>
+          <ModalFooter data-testid="modal-footer">Footer content</ModalFooter>
         </Modal>
       )
-      
+
       const footer = screen.getByTestId('modal-footer')
       expect(footer).toBeInTheDocument()
       expect(footer).toHaveClass('modal-footer')
@@ -265,7 +259,7 @@ describe('Modal Components', () => {
           </ModalFooter>
         </Modal>
       )
-      
+
       const footer = screen.getByTestId('footer')
       expect(footer).toHaveClass('custom-footer')
     })
@@ -274,7 +268,7 @@ describe('Modal Components', () => {
   describe('Modal composition', () => {
     it('renders complete modal structure', () => {
       const handleClose = vi.fn()
-      
+
       render(
         <Modal open={true} onClose={handleClose}>
           <ModalHeader>
@@ -289,7 +283,7 @@ describe('Modal Components', () => {
           </ModalFooter>
         </Modal>
       )
-      
+
       expect(screen.getByText('Confirmation')).toBeInTheDocument()
       expect(screen.getByText('Are you sure you want to delete this item?')).toBeInTheDocument()
       expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument()
@@ -300,7 +294,7 @@ describe('Modal Components', () => {
       const user = userEvent.setup()
       const handleClose = vi.fn()
       const handleDelete = vi.fn()
-      
+
       render(
         <Modal open={true} onClose={handleClose}>
           <ModalHeader>
@@ -315,10 +309,10 @@ describe('Modal Components', () => {
           </ModalFooter>
         </Modal>
       )
-      
+
       const deleteButton = screen.getByRole('button', { name: 'Confirm Delete' })
       await user.click(deleteButton)
-      
+
       expect(handleDelete).toHaveBeenCalled()
     })
   })
@@ -330,12 +324,10 @@ describe('Modal Components', () => {
           <ModalHeader>
             <ModalTitle>Accessible Modal</ModalTitle>
           </ModalHeader>
-          <ModalBody>
-            Modal content
-          </ModalBody>
+          <ModalBody>Modal content</ModalBody>
         </Modal>
       )
-      
+
       const modal = screen.getByRole('dialog')
       expect(modal).toHaveAttribute('aria-modal', 'true')
       expect(modal).toHaveAttribute('aria-labelledby')
@@ -347,15 +339,13 @@ describe('Modal Components', () => {
           <ModalHeader>
             <ModalTitle id="modal-title">Screen Reader Test</ModalTitle>
           </ModalHeader>
-          <ModalBody>
-            This modal is accessible to screen readers.
-          </ModalBody>
+          <ModalBody>This modal is accessible to screen readers.</ModalBody>
         </Modal>
       )
-      
+
       const modal = screen.getByRole('dialog')
       const title = screen.getByText('Screen Reader Test')
-      
+
       expect(modal).toHaveAttribute('aria-labelledby', 'modal-title')
       expect(title).toHaveAttribute('id', 'modal-title')
     })

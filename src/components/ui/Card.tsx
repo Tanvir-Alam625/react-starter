@@ -18,10 +18,7 @@ const CardHeader = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => 
 )
 
 const CardTitle = ({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
-  <h3
-    className={cn('font-semibold leading-none tracking-tight', className)}
-    {...props}
-  />
+  <h3 className={cn('font-semibold leading-none tracking-tight', className)} {...props} />
 )
 
 const CardDescription = ({ className, ...props }: HTMLAttributes<HTMLParagraphElement>) => (

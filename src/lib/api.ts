@@ -19,7 +19,8 @@ interface CacheEntry {
 class ApiCache {
   private cache = new Map<string, CacheEntry>()
 
-  set(key: string, data: any, ttl = 300000) { // 5 minutes default
+  set(key: string, data: any, ttl = 300000) {
+    // 5 minutes default
     this.cache.set(key, {
       data,
       timestamp: Date.now(),
@@ -61,7 +62,7 @@ api.interceptors.request.use(
 
     // Add request timestamp for debugging
     config.metadata = { startTime: Date.now() }
-    
+
     return config
   },
   (error) => {
@@ -75,7 +76,9 @@ api.interceptors.response.use(
     // Log response time in development
     if (import.meta.env.DEV && response.config.metadata) {
       const duration = Date.now() - response.config.metadata.startTime
-      console.log(`API ${response.config.method?.toUpperCase()} ${response.config.url}: ${duration}ms`)
+      console.log(
+        `API ${response.config.method?.toUpperCase()} ${response.config.url}: ${duration}ms`
+      )
     }
 
     return response
@@ -101,14 +104,14 @@ api.interceptors.response.use(
 export const apiClient = {
   get: async <T>(url: string, params?: object, options?: { cache?: boolean; ttl?: number }) => {
     const cacheKey = `GET:${url}:${JSON.stringify(params)}`
-    
+
     if (options?.cache) {
       const cached = cache.get(cacheKey)
       if (cached) return { data: cached }
     }
 
     const response = await api.get<T>(url, { params })
-    
+
     if (options?.cache) {
       cache.set(cacheKey, response.data, options.ttl)
     }

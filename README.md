@@ -5,6 +5,7 @@ A modern, professional React boilerplate built with TypeScript, Vite, Tailwind C
 ## ✨ Features
 
 ### Core Technologies
+
 - ⚡ **Vite** - Lightning-fast development and build tooling
 - 🎯 **TypeScript** - Type-safe development with strict configuration
 - 🎨 **Tailwind CSS** - Utility-first CSS framework with CSS variables
@@ -13,6 +14,7 @@ A modern, professional React boilerplate built with TypeScript, Vite, Tailwind C
 - 🎭 **Formatting** - Prettier with automated pre-commit hooks
 
 ### Enhanced UI Components
+
 - 🔘 **Button** - Multiple variants, sizes, loading states, and icons
 - 📝 **Input** - Enhanced with validation states and helper text
 - ☑️ **Checkbox** - Accessible with labels and descriptions
@@ -25,6 +27,7 @@ A modern, professional React boilerplate built with TypeScript, Vite, Tailwind C
 - 🎨 **Card** - Content containers with header, body, and footer
 
 ### Advanced Features
+
 - 🌙 **Theme System** - Light/dark/system themes with CSS variables
 - 📦 **State Management** - Zustand for lightweight state management
 - 🌐 **HTTP Client** - Enhanced Axios with caching and interceptors
@@ -72,6 +75,7 @@ __tests__/              # Organized test directory
 ## 🚀 Quick Start
 
 1. **Clone and setup:**
+
    ```bash
    git clone <your-repo-url>
    cd react-starter
@@ -79,12 +83,14 @@ __tests__/              # Organized test directory
    ```
 
 2. **Environment setup:**
+
    ```bash
    cp .env.example .env.local
    # Edit .env.local with your configuration
    ```
 
 3. **Start development:**
+
    ```bash
    npm run dev
    ```
@@ -94,24 +100,25 @@ __tests__/              # Organized test directory
 
 ## 📜 Available Scripts
 
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build |
-| `npm run test` | Run tests in watch mode |
-| `npm run test:run` | Run tests once |
-| `npm run test:coverage` | Run tests with coverage |
-| `npm run lint` | Lint and auto-fix code |
-| `npm run lint:check` | Check linting without fixing |
-| `npm run format` | Format code with Prettier |
-| `npm run format:check` | Check code formatting |
-| `npm run type-check` | Run TypeScript type checking |
-| `npm run validate` | Run all checks (lint, type, test) |
+| Script                  | Description                       |
+| ----------------------- | --------------------------------- |
+| `npm run dev`           | Start development server          |
+| `npm run build`         | Build for production              |
+| `npm run preview`       | Preview production build          |
+| `npm run test`          | Run tests in watch mode           |
+| `npm run test:run`      | Run tests once                    |
+| `npm run test:coverage` | Run tests with coverage           |
+| `npm run lint`          | Lint and auto-fix code            |
+| `npm run lint:check`    | Check linting without fixing      |
+| `npm run format`        | Format code with Prettier         |
+| `npm run format:check`  | Check code formatting             |
+| `npm run type-check`    | Run TypeScript type checking      |
+| `npm run validate`      | Run all checks (lint, type, test) |
 
 ## 🎨 UI Components Usage
 
 ### Enhanced Button
+
 ```tsx
 import { Button } from '@/components/ui/Button'
 
@@ -130,19 +137,20 @@ import { Button } from '@/components/ui/Button'
 ```
 
 ### Form Components
+
 ```tsx
 import { Input, Checkbox, RadioGroup, Select } from '@/components/ui'
 
 // Input with validation
-<Input 
-  placeholder="Email" 
+<Input
+  placeholder="Email"
   error="Invalid email"
   helperText="We'll never share your email"
 />
 
 // Checkbox with description
-<Checkbox 
-  label="Accept terms" 
+<Checkbox
+  label="Accept terms"
   description="By checking this, you agree to our terms"
 />
 
@@ -166,6 +174,7 @@ import { Input, Checkbox, RadioGroup, Select } from '@/components/ui'
 ```
 
 ### Data Table
+
 ```tsx
 import { DataTable } from '@/components/ui/DataTable'
 
@@ -175,7 +184,7 @@ const columns = [
   // ... more columns
 ]
 
-<DataTable 
+<DataTable
   columns={columns}
   data={userData}
   enableSorting
@@ -185,10 +194,10 @@ const columns = [
 ```
 
 ### Modal
+
 ```tsx
 import { Modal, ModalHeader, ModalTitle, ModalBody, ModalFooter } from '@/components/ui/Modal'
-
-<Modal open={isOpen} onClose={() => setIsOpen(false)}>
+;<Modal open={isOpen} onClose={() => setIsOpen(false)}>
   <ModalHeader>
     <ModalTitle>Confirm Action</ModalTitle>
   </ModalHeader>
@@ -213,12 +222,9 @@ import { useTheme } from '@/components/ThemeProvider'
 
 function ThemeToggle() {
   const { theme, setTheme } = useTheme()
-  
+
   return (
-    <Button 
-      variant="outline" 
-      onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-    >
+    <Button variant="outline" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
       Toggle Theme
     </Button>
   )
@@ -226,6 +232,7 @@ function ThemeToggle() {
 ```
 
 Themes are automatically applied using CSS variables defined in your CSS:
+
 - `--primary`, `--secondary`, `--background`, `--foreground`
 - Supports light, dark, and system preference detection
 - CSS variables ensure consistent theming across all components
@@ -246,6 +253,7 @@ npm run test:run
 ```
 
 Tests are located in the `__tests__` directory with mirrors the `src` structure:
+
 - Component tests in `__tests__/components/`
 - Utility tests in `__tests__/lib/`
 - Integration tests in `__tests__/integration/`
@@ -253,6 +261,7 @@ Tests are located in the `__tests__` directory with mirrors the `src` structure:
 ## ♿ Accessibility
 
 All components are built with accessibility in mind:
+
 - Proper ARIA attributes and roles
 - Keyboard navigation support
 - Screen reader compatibility
@@ -263,6 +272,7 @@ All components are built with accessibility in mind:
 ## 🔧 Development Tools
 
 ### ESLint Configuration
+
 - TypeScript support with strict rules
 - React hooks validation
 - Accessibility rules (jsx-a11y)
@@ -270,12 +280,15 @@ All components are built with accessibility in mind:
 - Prettier integration
 
 ### Git Hooks (Husky)
+
 - Pre-commit: Lint, format, and test
 - Automated code quality checks
 - Prevents bad commits
 
 ### API Client
+
 Enhanced Axios client with:
+
 ```tsx
 import { apiClient } from '@/lib/api'
 
@@ -289,24 +302,24 @@ const newUser = await apiClient.post('/users', userData)
 ## 📦 State Management
 
 ### Zustand Store
+
 ```tsx
 import { useAppStore } from '@/store/appStore'
 
 function MyComponent() {
   const { user, setUser, theme, setTheme } = useAppStore()
-  
+
   return (
     <div>
       <p>Welcome, {user?.name}</p>
-      <Button onClick={() => setTheme('dark')}>
-        Switch to Dark Mode
-      </Button>
+      <Button onClick={() => setTheme('dark')}>Switch to Dark Mode</Button>
     </div>
   )
 }
 ```
 
 ### React Query Integration
+
 ```tsx
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api'
@@ -319,11 +332,11 @@ function UserProfile() {
 
   const updateUser = useMutation({
     mutationFn: (userData) => apiClient.put('/user', userData),
-    onSuccess: () => queryClient.invalidateQueries(['user'])
+    onSuccess: () => queryClient.invalidateQueries(['user']),
   })
 
   if (isLoading) return <div>Loading...</div>
-  
+
   return <div>{user.name}</div>
 }
 ```
@@ -331,18 +344,22 @@ function UserProfile() {
 ## 🚀 Deployment
 
 ### Build for Production
+
 ```bash
 npm run build
 ```
 
 ### Deployment Platforms
+
 Ready for deployment on:
+
 - **Vercel** - Zero-config deployment
-- **Netlify** - Static site hosting  
+- **Netlify** - Static site hosting
 - **GitHub Pages** - Free hosting
 - **Docker** - Containerized deployment
 
 ### Environment Variables
+
 ```bash
 # Required for API integration
 VITE_API_URL=https://api.yourdomain.com
@@ -353,16 +370,20 @@ VITE_APP_VERSION=1.0.0
 ## 📋 Code Quality
 
 ### Pre-commit Hooks
+
 Automatically runs on every commit:
+
 - ESLint with auto-fix
 - Prettier formatting
 - TypeScript type checking
 - Test execution
 
 ### Validation Command
+
 ```bash
 npm run validate
 ```
+
 Runs all quality checks: linting, type checking, and tests.
 
 ## 🤝 Contributing
