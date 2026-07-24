@@ -10,7 +10,7 @@
     "lint:check": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
-    "test:ui": "vitest --ui",
+    "test:ui": "vitest --ui --open",
     "test:run": "vitest run",
     "test:coverage": "vitest --coverage",
     "format": "prettier --write .",

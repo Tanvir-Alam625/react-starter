@@ -116,7 +116,6 @@ const Select = forwardRef<any, SelectProps>(
       if (typeof onChange !== 'function') return
 
       if (props.isMulti) {
-         
         console.log(
           'Select.handleChange called with:',
           JSON.stringify(value),

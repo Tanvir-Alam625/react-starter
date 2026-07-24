@@ -9,7 +9,6 @@ import {
   useId,
   type ReactNode,
   type HTMLAttributes,
-  type KeyboardEvent,
 } from 'react'
 import { createPortal } from 'react-dom'
 import { cn } from '@/lib/utils'

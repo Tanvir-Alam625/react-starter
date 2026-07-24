@@ -1,7 +1,7 @@
 import { type ReactNode, type HTMLAttributes } from 'react'
 import { cn } from '@/lib/utils'
 
-export interface FormFieldProps<TFieldValues = unknown, TName extends string = string>
+export interface FormFieldProps<TName extends string = string>
   extends HTMLAttributes<HTMLDivElement> {
   name: TName
   children: ReactNode
@@ -36,12 +36,12 @@ export interface FormMessageProps extends HTMLAttributes<HTMLParagraphElement> {
   children: ReactNode
 }
 
-const FormField = <TFieldValues = unknown, TName extends string = string>({
+const FormField = <TName extends string = string>({
   name,
   children,
   className,
   ...props
-}: FormFieldProps<TFieldValues, TName>) => {
+}: FormFieldProps<TName>) => {
   return (
     <div className={cn('form-field', className)} data-field={name} {...props}>
       {children}

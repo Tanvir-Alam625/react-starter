@@ -6,11 +6,10 @@ import {
   useContext,
   Children,
   cloneElement,
-  isValidElement,
   type ReactNode,
   type HTMLAttributes,
   type ReactElement,
-  type KeyboardEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
   type MouseEvent as ReactMouseEvent,
 } from 'react'
 import { cn } from '@/lib/utils'
@@ -24,13 +23,23 @@ interface DropdownContextValue {
 
 const DropdownContext = createContext<DropdownContextValue | undefined>(undefined)
 
+export interface DropdownItemShape {
+  key: string
+  label: string
+  onClick?: () => void
+  separator?: boolean
+}
+
 export interface DropdownProps {
-  children: ReactNode
+  children?: ReactNode
   className?: string
   placement?: 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end'
   disabled?: boolean
   open?: boolean
   onOpenChange?: (open: boolean) => void
+  // legacy/alternate API
+  trigger?: ReactElement
+  items?: DropdownItemShape[]
 }
 
 const placementClasses = {
@@ -47,6 +56,8 @@ const Dropdown = ({
   disabled = false,
   open,
   onOpenChange,
+  trigger,
+  items,
 }: DropdownProps) => {
   const [internalOpen, setInternalOpen] = useState(false)
   const isControlled = open !== undefined
@@ -62,8 +73,9 @@ const Dropdown = ({
       }
     }
 
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+    const handleEscape = (event: Event) => {
+      const e = event as KeyboardEvent
+      if (e.key === 'Escape') {
         if (!isControlled) setInternalOpen(false)
         onOpenChange?.(false)
       }
@@ -71,12 +83,12 @@ const Dropdown = ({
 
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside)
-      document.addEventListener('keydown', handleEscape)
+      document.addEventListener('keydown', handleEscape as EventListener)
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
-      document.removeEventListener('keydown', handleEscape)
+      document.removeEventListener('keydown', handleEscape as EventListener)
     }
   }, [isOpen, isControlled, onOpenChange])
 
@@ -91,13 +103,46 @@ const Dropdown = ({
     onOpenChange?.(false)
   }
 
+  // Support legacy trigger/items API: render cloned trigger and auto-generate content
+  const triggerNode = trigger
+    ? cloneElement(trigger, {
+        ...((trigger.props as any) || {}),
+        onClick: (e: any) => {
+          ;(trigger.props as any).onClick?.(e)
+          toggleOpen()
+        },
+      })
+    : null
+
   return (
     <DropdownContext.Provider value={{ open: isOpen, disabled, toggleOpen, close }}>
       <div ref={dropdownRef} className={cn('relative inline-block', className)}>
-        {Children.map(children, (child) => {
-          if (!child) return null
-          return child
-        })}
+        {triggerNode || Children.map(children, (child) => (child ? child : null))}
+        {items && isOpen && (
+          <div
+            className={cn(
+              'absolute z-50 mt-1 min-w-[200px] rounded-md border bg-popover p-1 shadow-md',
+              placementClasses[placement]
+            )}
+          >
+            {items.map((it) =>
+              it.separator ? (
+                <div key={it.key} className="my-1 h-px bg-border" />
+              ) : (
+                <button
+                  key={it.key}
+                  className="block w-full text-left px-2 py-1 text-sm"
+                  onClick={() => {
+                    it.onClick?.()
+                    close()
+                  }}
+                >
+                  {it.label}
+                </button>
+              )
+            )}
+          </div>
+        )}
       </div>
     </DropdownContext.Provider>
   )
@@ -117,21 +162,21 @@ export const DropdownTrigger = ({ children, ...props }: DropdownTriggerProps) =>
   const child = Children.only(children) as ReactElement
 
   const handleClick = (event: ReactMouseEvent) => {
-    child.props.onClick?.(event)
+    ;(child.props as any).onClick?.(event)
     toggleOpen()
   }
 
-  const handleKeyDown = (event: KeyboardEvent) => {
+  const handleKeyDown = (event: ReactKeyboardEvent) => {
     if (disabled) return
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault()
       toggleOpen()
     }
-    child.props.onKeyDown?.(event)
+    ;(child.props as any).onKeyDown?.(event)
   }
 
   return cloneElement(child, {
-    ...child.props,
+    ...((child.props as any) || {}),
     ...props,
     'aria-haspopup': 'true',
     'aria-expanded': open,
@@ -202,7 +247,7 @@ export const DropdownItem = ({
   onKeyDown,
   ...props
 }: DropdownItemProps) => {
-  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+  const handleKeyDown = (event: ReactKeyboardEvent<HTMLButtonElement>) => {
     if (disabled) {
       onKeyDown?.(event)
       return

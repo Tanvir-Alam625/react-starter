@@ -14,15 +14,7 @@ import { cn } from '@/lib/utils'
 import { Button } from './Button'
 import { Input } from './Input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './Table'
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-  ArrowUpDown,
-  ArrowUp,
-  ArrowDown,
-} from 'lucide-react'
+import { ChevronLeft, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
