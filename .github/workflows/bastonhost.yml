@@ -32,5 +32,29 @@ jobs:
 
       - name: Run Test UI
         run: npm run test:ui -y
+
       - name: Build project
         run: npm run build
+
+  PrivateServerPushCodeWithRunner:
+    runs-on: self-hosted
+    needs: ProjectTest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: APT Update and Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y nodejs npm
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install
+      - name: Build project
+        run: npm run build
+      - name: Install pm2 globally
+        run: npm install pm2 -g
+      - name: Start the application with pm2
+        run: pm2 start "npm run preview"
