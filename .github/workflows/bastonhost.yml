@@ -81,7 +81,7 @@ jobs:
           pm2 save
 
   Runner-2:
-    runs-on: self-hosted
+    runs-on: server-2
     needs: ProjectTest
     steps:
       - name: Checkout code
