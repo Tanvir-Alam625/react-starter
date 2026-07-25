@@ -36,7 +36,7 @@ jobs:
       - name: Build project
         run: npm run build
 
-  Runner:
+  Runner-1:
     runs-on: self-hosted
     needs: ProjectTest
     steps:
@@ -79,9 +79,54 @@ jobs:
 
           # Save the process list so it persists
           pm2 save
+
+  Runner-2:
+    runs-on: self-hosted
+    needs: ProjectTest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Install PM2 Conditionally
+        run: |
+          # Check if pm2 command exists system-wide
+          if ! command -v pm2 &> /dev/null; then
+            echo "PM2 not found. Installing globally..."
+            sudo npm install -g pm2
+            sudo ln -sf $(which pm2) /usr/bin/pm2
+          else
+            echo "PM2 is already installed. Skipping installation."
+            pm2 -v
+          fi
+
+      - name: Start or Restart with PM2
+        run: |
+          # Check if the process name is already managed by PM2
+          if pm2 list | grep -q "ReactStarter-3000"; then
+            echo "Application is running. Restarting to apply changes..."
+            pm2 restart "ReactStarter-3000" --update-env
+          else
+            echo "Application not found in PM2. Starting fresh..."
+            pm2 start "npm run preview -- --host" --name "ReactStarter-3000"
+          fi
+
+          # Save the process list so it persists
+          pm2 save
+
   Deploy:
     runs-on: ubuntu-latest
-    needs: Runner
+    needs: [Runner-1, Runner-2]
     steps:
       - name: EC2 Connect
         uses: appleboy/ssh-action@v0.1.5
@@ -90,96 +135,118 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
-          script: |
-            set -e
+        script: |
+          set -e
 
-            # Define ANSI color codes
-            BOLD='\033[1;36m'
-            GREEN='\033[0;32m'
-            YELLOW='\033[1;33m'
-            BLUE='\033[0;34m'
-            RED='\033[0;31m'
-            NC='\033[0m' # No Color
+          # Define ANSI color codes
+          BOLD='\033[1;36m'
+          GREEN='\033[0;32m'
+          YELLOW='\033[1;33m'
+          BLUE='\033[0;34m'
+          RED='\033[0;31m'
+          NC='\033[0m' # No Color
 
-            log_header()  { echo -e "\n${BOLD}========================================${NC}"; echo -e "${BOLD}▶ $1${NC}"; echo -e "${BOLD}========================================${NC}"; }
-            log_info()    { echo -e "${BLUE}ℹ${NC} $1"; }
-            log_success() { echo -e "${GREEN}✓${NC} $1"; }
-            log_warn()    { echo -e "${YELLOW}⚠${NC} $1"; }
-            log_error()   { echo -e "${RED}✗${NC} $1"; }
+          log_header()  { echo -e "\n${BOLD}========================================${NC}"; echo -e "${BOLD}▶ $1${NC}"; echo -e "${BOLD}========================================${NC}"; }
+          log_info()    { echo -e "${BLUE}ℹ${NC} $1"; }
+          log_success() { echo -e "${GREEN}✓${NC} $1"; }
+          log_warn()    { echo -e "${YELLOW}⚠${NC} $1"; }
+          log_error()   { echo -e "${RED}✗${NC} $1"; }
 
-            log_header "STEP 1: VERIFYING NGINX INSTALLATION"
-            if ! command -v nginx >/dev/null 2>&1; then
-              log_warn "Nginx server is not installed. Installing Nginx..."
-              sudo apt-get update -qq
-              sudo apt-get install -y nginx
-              sudo systemctl enable nginx
-              sudo systemctl start nginx
-              log_success "Nginx installed and started."
-            else
-              log_success "Nginx installation verified."
-            fi
+          log_header "STEP 1: VERIFYING NGINX INSTALLATION"
+          if ! command -v nginx >/dev/null 2>&1; then
+            log_warn "Nginx server is not installed. Installing Nginx..."
+            sudo apt-get update -qq
+            sudo apt-get install -y nginx
+            sudo systemctl enable nginx
+            sudo systemctl start nginx
+            log_success "Nginx installed and started."
+          else
+            log_success "Nginx installation verified."
+          fi
 
-            log_header "STEP 2: SSL CERTIFICATES"
-            if [ ! -f "/etc/ssl/cloudflare/${{vars.DOMAIN}}.crt" ] || [ ! -f "/etc/ssl/cloudflare/${{vars.DOMAIN}}.key" ]; then
-              log_warn "SSL certificate or private key missing for ${{vars.DOMAIN}}."
-              log_info "Provisioning SSL certificates..."
-              sudo mkdir -p /etc/ssl/cloudflare
+          log_header "STEP 2: SSL CERTIFICATES"
+          if [ ! -f "/etc/ssl/cloudflare/${{vars.DOMAIN}}.crt" ] || [ ! -f "/etc/ssl/cloudflare/${{vars.DOMAIN}}.key" ]; then
+            log_warn "SSL certificate or private key missing for ${{vars.DOMAIN}}."
+            log_info "Provisioning SSL certificates..."
+            sudo mkdir -p /etc/ssl/cloudflare
 
-              sudo tee /etc/ssl/cloudflare/${{vars.DOMAIN}}.crt > /dev/null <<'EOL'
-            ${{secrets.SSL_CERTIFICATE_TANVIROPSDOTXYZ}}
-            EOL
+            sudo tee /etc/ssl/cloudflare/${{vars.DOMAIN}}.crt > /dev/null <<'EOL'
+          ${{secrets.SSL_CERTIFICATE_TANVIROPSDOTXYZ}}
+          EOL
 
-              sudo tee /etc/ssl/cloudflare/${{vars.DOMAIN}}.key > /dev/null <<'EOL'
-            ${{secrets.SSL_PRIVATE_KEY_TANVIROPSDOTXYZ}}
-            EOL
+            sudo tee /etc/ssl/cloudflare/${{vars.DOMAIN}}.key > /dev/null <<'EOL'
+          ${{secrets.SSL_PRIVATE_KEY_TANVIROPSDOTXYZ}}
+          EOL
 
-              sudo chmod 644 /etc/ssl/cloudflare/${{vars.DOMAIN}}.crt
-              sudo chmod 600 /etc/ssl/cloudflare/${{vars.DOMAIN}}.key
-              log_success "SSL certificates provisioned and permissions set."
-            else
-              log_success "SSL certificates already exist for ${{vars.DOMAIN}}."
-            fi
+            sudo chmod 644 /etc/ssl/cloudflare/${{vars.DOMAIN}}.crt
+            sudo chmod 600 /etc/ssl/cloudflare/${{vars.DOMAIN}}.key
+            log_success "SSL certificates provisioned and permissions set."
+          else
+            log_success "SSL certificates already exist for ${{vars.DOMAIN}}."
+          fi
 
-            log_header "STEP 3: NGINX PROXY ROUTING"
-            log_info "Creating Nginx proxy configuration for ${{vars.DOMAIN}}..."
-            sudo tee /etc/nginx/sites-available/${{vars.DOMAIN}} > /dev/null <<'EOL'
-            server {
-                listen 80;
-                server_name ${{vars.DOMAIN}} www.${{vars.DOMAIN}};
-                return 301 https://$host$request_uri;
-            }
+          log_header "STEP 3: NGINX UPSTREAM LOAD BALANCING"
+          log_info "Parsing backend servers from GitHub variables..."
 
-            server {
-                listen 443 ssl;
-                server_name ${{vars.DOMAIN}} www.${{vars.DOMAIN}};
-                ssl_certificate /etc/ssl/cloudflare/${{vars.DOMAIN}}.crt;
-                ssl_certificate_key /etc/ssl/cloudflare/${{vars.DOMAIN}}.key;
+          # Format raw comma-separated values from GitHub into Nginx block format
+          UPSTREAM_SERVERS=""
+          IFS=',' read -ra ADDR <<< "${{vars.APP_HOSTSWITHPORT}}"
+          for i in "${ADDR[@]}"; do
+            # Clean spaces and quotes from the variable string loop
+            CLEAN_SERVER=$(echo "$i" | tr -d '"' | xargs)
+            UPSTREAM_SERVERS="${UPSTREAM_SERVERS}    server ${CLEAN_SERVER};\n"
+          done
 
-                location / {
-                    proxy_pass http://${{vars.APP_HOST}}:${{vars.APP_PORT}};
-                    proxy_http_version 1.1;
-                    proxy_set_header Upgrade $http_upgrade;
-                    proxy_set_header Connection 'upgrade';
-                    proxy_set_header Host $host;
-                    proxy_set_header X-Real-IP $remote_addr;
-                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                    proxy_set_header X-Forwarded-Proto $scheme;
-                    proxy_cache_bypass $http_upgrade;
-                }
-            }
-            EOL
+          log_info "Creating Nginx configuration for ${{vars.DOMAIN}}..."
+          sudo tee /etc/nginx/sites-available/${{vars.DOMAIN}} > /dev/null <<EOL
+          upstream react_backend_cluster {
+          $(echo -e "$UPSTREAM_SERVERS")
+          }
 
-            log_info "Enabling Nginx configuration..."
-            sudo ln -sf /etc/nginx/sites-available/${{vars.DOMAIN}} /etc/nginx/sites-enabled/
+          server {
+              listen 80;
+              server_name ${{vars.DOMAIN}} www.${{vars.DOMAIN}};
+              return 301 https://\$host\$request_uri;
+          }
 
-            log_info "Validating Nginx configuration syntax..."
-            if sudo nginx -t; then
-              log_success "Nginx configuration syntax is valid."
-            else
-              log_error "Nginx configuration test failed!"
-              exit 1
-            fi
+          server {
+              listen 443 ssl;
+              server_name ${{vars.DOMAIN}} www.${{vars.DOMAIN}};
+              ssl_certificate /etc/ssl/cloudflare/${{vars.DOMAIN}}.crt;
+              ssl_certificate_key /etc/ssl/cloudflare/${{vars.DOMAIN}}.key;
 
-            log_info "Restarting Nginx service to apply changes..."
-            sudo systemctl restart nginx
-            log_success "Reverse proxy setup completed! Public traffic is now routed to ${{vars.APP_HOST}}:${{vars.APP_PORT}}."
+              location / {
+                  proxy_pass http://react_backend_cluster;
+                  proxy_http_version 1.1;
+                  proxy_set_header Upgrade \$http_upgrade;
+                  proxy_set_header Connection 'upgrade';
+                  proxy_set_header Host \$host;
+                  proxy_set_header X-Real-IP \$remote_addr;
+                  proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto \$scheme;
+                  proxy_cache_bypass \$http_upgrade;
+              }
+          }
+          EOL
+
+          # Conditional check to only create the symbolic link if it does not exist
+          if [ ! -L "/etc/nginx/sites-enabled/${{vars.DOMAIN}}" ]; then
+            log_info "First-time setup: Creating symbolic link..."
+            sudo ln -s /etc/nginx/sites-available/${{vars.DOMAIN}} /etc/nginx/sites-enabled/
+            log_success "Symbolic link established."
+          else
+            log_info "Symbolic link already exists. Skipping link creation."
+          fi
+
+          log_header "STEP 4: SYSTEM VALIDATION & RELOAD"
+          log_info "Validating Nginx configuration syntax..."
+          if sudo nginx -t; then
+            log_success "Nginx configuration syntax is valid."
+          else
+            log_error "Nginx configuration test failed!"
+            exit 1
+          fi
+
+          log_info "Restarting Nginx service to apply changes..."
+          sudo systemctl restart nginx
+          log_success "Load balancing setup completed! Public traffic is now routed via Round-Robin."
