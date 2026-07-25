@@ -42,31 +42,40 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: APT Update and Install Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y nodejs npm
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '22'
+
       - name: Install dependencies
         run: npm install
 
       - name: Build project
         run: npm run build
 
-      - name: Install pm2 globally
+      - name: Install PM2 Conditionally
         run: |
+          # Check if pm2 command exists system-wide
           if ! command -v pm2 &> /dev/null; then
+            echo "PM2 not found. Installing globally..."
             sudo npm install -g pm2
+            sudo ln -sf $(which pm2) /usr/bin/pm2
+          else
+            echo "PM2 is already installed. Skipping installation."
+            pm2 -v
           fi
-          pm2 -v
-          pm2 update
-          pm2 delete all
-          pm2 list
 
-      - name: Start the application with pm2
+      - name: Smart Start or Restart with PM2
         run: |
-          pm2 start "npm run preview" --name:"ReactStarter:3000"
+          # Check if the process name is already managed by PM2
+          if pm2 list | grep -q "ReactStarter-3000"; then
+            echo "Application is running. Restarting to apply changes..."
+            pm2 restart "ReactStarter-3000" --update-env
+          else
+            echo "Application not found in PM2. Starting fresh..."
+            pm2 start "npm run preview -- --host" --name "ReactStarter-3000"
+          fi
+
+          # Save the process list so it persists
           pm2 save
