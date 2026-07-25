@@ -52,9 +52,12 @@ jobs:
           node-version: '22'
       - name: Install dependencies
         run: npm install
+
       - name: Build project
         run: npm run build
+
       - name: Install pm2 globally
         run: npm install pm2 -g
+
       - name: Start the application with pm2
         run: pm2 start "npm run preview"
