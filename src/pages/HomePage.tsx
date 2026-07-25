@@ -6,7 +6,7 @@ import { Checkbox } from '@/components/ui/Checkbox'
 import { RadioGroup } from '@/components/ui/Radio'
 import { Select, type SelectOption } from '@/components/ui/Select'
 import { Modal, ModalHeader, ModalTitle, ModalBody, ModalFooter } from '@/components/ui/Modal'
-import { Dropdown, DropdownTrigger } from '@/components/ui/Dropdown'
+import { Dropdown } from '@/components/ui/Dropdown'
 import {
   Table,
   TableBody,
@@ -232,7 +232,11 @@ export const HomePage = () => {
             <div className="pt-4 border-t">
               <h4 className="font-medium mb-3">Dropdown Example</h4>
               <Dropdown
-                trigger={<DropdownTrigger>Account Menu</DropdownTrigger>}
+                trigger={
+                  <Button variant="outline">
+                    Account Menu <ChevronDown className="ml-2 h-4 w-4" />
+                  </Button>
+                }
                 items={dropdownItems}
               />
             </div>

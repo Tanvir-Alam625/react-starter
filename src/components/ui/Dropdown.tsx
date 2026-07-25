@@ -6,6 +6,7 @@ import {
   useContext,
   Children,
   cloneElement,
+  isValidElement,
   type ReactNode,
   type HTMLAttributes,
   type ReactElement,
@@ -159,10 +160,15 @@ export const DropdownTrigger = ({ children, ...props }: DropdownTriggerProps) =>
   }
 
   const { open, disabled, toggleOpen } = context
-  const child = Children.only(children) as ReactElement
+  const childrenArray = Children.toArray(children)
+  const child =
+    childrenArray.length === 1 && isValidElement(childrenArray[0])
+      ? (childrenArray[0] as ReactElement)
+      : null
 
   const handleClick = (event: ReactMouseEvent) => {
-    ;(child.props as any).onClick?.(event)
+    ;(child?.props as any)?.onClick?.(event)
+    ;(props as any).onClick?.(event)
     toggleOpen()
   }
 
@@ -172,17 +178,34 @@ export const DropdownTrigger = ({ children, ...props }: DropdownTriggerProps) =>
       event.preventDefault()
       toggleOpen()
     }
-    ;(child.props as any).onKeyDown?.(event)
+    ;(child?.props as any)?.onKeyDown?.(event)
+    ;(props as any).onKeyDown?.(event)
   }
 
-  return cloneElement(child, {
-    ...((child.props as any) || {}),
-    ...props,
-    'aria-haspopup': 'true',
-    'aria-expanded': open,
-    onClick: handleClick,
-    onKeyDown: handleKeyDown,
-  })
+  if (child) {
+    return cloneElement(child, {
+      ...((child.props as any) || {}),
+      ...props,
+      'aria-haspopup': 'true',
+      'aria-expanded': open,
+      onClick: handleClick,
+      onKeyDown: handleKeyDown,
+    })
+  }
+
+  return (
+    <button
+      type="button"
+      {...(props as any)}
+      aria-haspopup="true"
+      aria-expanded={open}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      disabled={disabled}
+    >
+      {children}
+    </button>
+  )
 }
 
 export interface DropdownContentProps extends HTMLAttributes<HTMLDivElement> {
