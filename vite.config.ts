@@ -10,4 +10,9 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+    // Add this preview configuration block
+  preview: {
+    allowedHosts: ['starter.tanvirops.xyz']
+  }
+
 })
