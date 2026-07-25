@@ -64,15 +64,15 @@ jobs:
           if ! command -v pm2 &> /dev/null; then
             echo "PM2 not found. Installing globally..."
             
-            # FIX: Find the absolute path of the GitHub runner's npm
-            NPM_PATH=$(which npm)
-            echo "Using temporary npm path: $NPM_PATH"
+            # 1. Get the directory where node and npm live for this workflow run
+            NODE_BIN_DIR=$(dirname $(which npm))
+            echo "GitHub Actions Node directory: $NODE_BIN_DIR"
             
-            # FIX: Pass the exact npm path inside the sudo command execution context
-            sudo "$NPM_PATH" install -g pm2
+            # 2. Force sudo to include that specific directory in its path during execution
+            sudo env "PATH=$NODE_BIN_DIR:$PATH" npm install -g pm2
             
-            # Create system link
-            sudo ln -sf $(sudo which pm2 || which pm2) /usr/bin/pm2
+            # 3. Create a clean system link so the runner user can find it without path scripts
+            sudo ln -sf "$NODE_BIN_DIR/pm2" /usr/bin/pm2
           else
             echo "PM2 is already installed. Skipping installation."
             pm2 -v
